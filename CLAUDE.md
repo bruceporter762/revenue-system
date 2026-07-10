@@ -21,6 +21,8 @@ Each agent's ground rule #1 is to read the outputs of the agents before it in th
 
 See `RUNBOOK-UPDATE.md` for the reasoning behind this ordering and for By Celebration's current recommended execution order (conversion infrastructure — abandoned cart flow, published blog posts, confirmed domain — should be finished before reel-script-writer/distribution-lead start driving traffic at it).
 
+There's no runner script — the pipeline is executed by invoking each agent as a Claude Code subagent (via the Agent/Task tool) in order, one at a time, passing each agent's markdown output forward as input to the next. Nothing auto-chains; a human or orchestrating Claude session decides when to advance to the next stage.
+
 ## `business-brief.md` is the shared source of truth
 
 Every agent reads this file first. It holds the offer, audience, pricing, brand voice, and current store state, including explicit `[Confirm: ...]` placeholders for data that hasn't been validated yet (competitor pricing, margins, revenue targets). Rules for this file:
@@ -32,6 +34,7 @@ Every agent reads this file first. It holds the offer, audience, pricing, brand 
 ## Agent file conventions
 
 - Agent definitions use YAML frontmatter (`name`, `description`, `tools`) followed by `# Role`, `# Ground Rules`, `# Process`, and `# Output Format` sections. Follow this structure for any new agent.
+- The `tools` field lists conceptual capabilities (e.g. `web_search`, `pricing_research`, `calendar_management`), not literal Claude Code tool names — it documents what the agent is meant to do, not a permissions grant. Match that naming style rather than substituting built-in tool identifiers.
 - All six subagents live in `.claude/agents/` (market-signal-researcher, offer-architect, content-angle-strategist, reel-script-writer, distribution-lead, conversion-system-builder), which is what makes them registered Claude Code subagents. New agents should go here too, not in a top-level `agents/` directory.
 - Each agent's `# Output Format` section is a contract for the next agent in the chain — if you change one agent's output structure, check whether a downstream agent's "Process" step depends on that structure.
 
