@@ -32,7 +32,7 @@ Every agent reads this file first. It holds the offer, audience, pricing, brand 
 ## Agent file conventions
 
 - Agent definitions use YAML frontmatter (`name`, `description`, `tools`) followed by `# Role`, `# Ground Rules`, `# Process`, and `# Output Format` sections. Follow this structure for any new agent.
-- Wired subagents live in `.claude/agents/` (market-signal-researcher, offer-architect, content-angle-strategist, distribution-lead, conversion-system-builder). **`agents/reel-script-writer.md` is the exception** — despite being part of the same pipeline and having identical frontmatter format, it lives at the top-level `agents/` directory rather than `.claude/agents/`, so it is not actually registered as a Claude Code subagent the way the other five are. Be aware of this when adding new agents or if reel-script-writer isn't behaving like a subagent — moving it into `.claude/agents/` is likely the fix, but confirm with the user before relocating it since it may be intentional staging.
+- All six subagents live in `.claude/agents/` (market-signal-researcher, offer-architect, content-angle-strategist, reel-script-writer, distribution-lead, conversion-system-builder), which is what makes them registered Claude Code subagents. New agents should go here too, not in a top-level `agents/` directory.
 - Each agent's `# Output Format` section is a contract for the next agent in the chain — if you change one agent's output structure, check whether a downstream agent's "Process" step depends on that structure.
 
 ## Editing `RUNBOOK-UPDATE.md`-style docs
